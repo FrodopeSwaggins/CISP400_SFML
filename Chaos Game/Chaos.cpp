@@ -5,9 +5,8 @@
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
-#include <vector>
-#include <cmath>
 #include <SFML/Graphics.hpp>
+
 
 using namespace sf;
 using namespace std;
@@ -22,8 +21,7 @@ int main()
 
 
     //Make window
-    // removed fullscreen and reduced vm size to give managable window. can be added back later
-    VideoMode vm(800, 600);
+    VideoMode vm(1000, 1000);
     RenderWindow window(vm, "Chaos Game!!!");
 
     //CREATE TEXT;
@@ -38,38 +36,41 @@ int main()
     dotText = text;
     dotText.setPosition(10, 100);
 
-    srand(time(0));
-
     int inputCounter = 0; //see how many clicks;
     int dotCounter = 0;
-    // rando coords
-    int x = rand() % (vm.height - 50) + 10;
-    int y = rand() % (vm.width - 50) + 10;
 
+    //dots
+    RectangleShape dot1, dot2, dot3, dot4, dot5, dot6;
+    dot1.setSize(Vector2f(1, 1));
+    dot1.setFillColor(Color::White);
+    dot2 = dot1;
+    dot3 = dot1;
+    dot4 = dot1;
+    dot5 = dot1;
+    dot6 = dot1;
+    vector<RectangleShape> dotList;
+    int rng; //rng number
+
+    //control input;
     bool acceptInput = true;
 
-    // base triangle with random square every launch
-    Vector2f point1(vm.width / 2, 0);
-    Vector2f point2(50, vm.height - 50);
-    Vector2f point3(vm.width - 50, vm.height - 50);
 
-    // creating random squares
-    Clock c1;
-    vector<RectangleShape> s;
+    Vector2f temp, temp2;
 
-    // the squares
-    RectangleShape dota, dotb, dotc, dot;
-    dota.setSize(Vector2f(5, 5));
-    dota.setFillColor(Color::White);
-    dotb = dota;
-    dotc = dota;
-    dot = dota;
+    //COLORS!!!//was experimentin with values, var does not == color
+    Color red(255, 0, 0);
+    Color blue(0, 0, 255);
+    Color green(0, 255, 0);
+    Color yellow(255, 255, 0);
+    Color pink(255, 0, 255);
+
 
     while (window.isOpen())
     {
+        //Coordinates
+        int x, y;
 
-
-        //HANDLE PLAYER INPUT--------ESC
+        //TO CLOSE
         Event event;
         while (window.pollEvent(event))
         {
@@ -78,55 +79,185 @@ int main()
                 window.close();
             }
         }
-
+        //ESC TO CLOSE
         if (Keyboard::isKeyPressed(Keyboard::Escape))
         {
             window.close();
         }
 
-        // statement which adds squares. number below can be adjusted for speed by adding extra 0s
-        if (c1.getElapsedTime().asSeconds() > 0.1)
-        {
-            // num is used to pick between point 1, 2, or 3
-            int num = rand() % 3;
-            s.push_back(RectangleShape());
-            s.back().setSize(Vector2f(1, 1));
-            // statement that chooses where the square will be 0 is point1
-            if (num == 0) {
-                x = lerp(x, vm.width / 2, 0.5);
-                y = lerp(y, 0, 0.5);
-            }
-            else if (num == 1) {
-                x = lerp(x, 50, 0.5);
-                y = lerp(y, vm.height - 50, 0.5);
-            }
-            else if (num == 2) {
-                x = lerp(x, vm.width - 50, 0.5);
-                y = lerp(y, vm.height - 50, 0.5);;
-            }
-            s.back().setPosition(x, y);
-            c1.restart();
-        }
         /***************************************************************************
-        * First three inputs
+        * First three inputs + 1 to start
         ***************************************************************************/
-        // triangle
-        dota.setPosition(point1);
-        dotb.setPosition(point2);
-        dotc.setPosition(point3);
+
+        if (acceptInput && dotCounter == 0)//For the first click, now need 2 more + 1;
+        {
+            if (event.type == Event::MouseButtonPressed)//CLICK
+            {
+                x = event.mouseButton.x;        //GET X
+                y = event.mouseButton.y;        //GET Y
+                dot1.setPosition(x, y);         //SET DOT X,Y
+                inputCounter++;                 //INCREMENT
+                dotCounter++;
+                acceptInput = false;            //AVOID 100 MPH
+            }
+        }
+        if (acceptInput && dotCounter == 1)        //AGAIN2
+        {
+            if (event.type == Event::MouseButtonPressed)
+            {
+                x = event.mouseButton.x;
+                y = event.mouseButton.y;
+                dot2.setPosition(x, y);
+                inputCounter++;
+                dotCounter++;
+                acceptInput = false;
+            }
+        }
+        if (acceptInput && dotCounter == 2)         //AGAIN3
+        {
+            if (event.type == Event::MouseButtonPressed)
+            {
+                x = event.mouseButton.x;
+                y = event.mouseButton.y;
+                dot3.setPosition(x, y);
+                inputCounter++;
+                dotCounter++;
+                acceptInput = false;
+            }
+        }
+
+        if (acceptInput && dotCounter == 3)         //AGAIN3
+        {
+            if (event.type == Event::MouseButtonPressed)
+            {
+                x = event.mouseButton.x;
+                y = event.mouseButton.y;
+                dot4.setPosition(x, y);
+                inputCounter++;
+                dotCounter++;
+                acceptInput = false;
+            }
+        }
+
+        if (acceptInput && dotCounter == 4)         //AGAIN3
+        {
+            if (event.type == Event::MouseButtonPressed)
+            {
+                x = event.mouseButton.x;
+                y = event.mouseButton.y;
+                dot5.setPosition(x, y);
+                inputCounter++;
+                dotCounter++;
+                acceptInput = false;
+            }
+        }
+
+        if (acceptInput && dotCounter == 5)         //AGAIN4 AND LAST
+        {
+            if (event.type == Event::MouseButtonPressed)
+            {
+                x = event.mouseButton.x;
+                y = event.mouseButton.y;
+                dot6.setPosition(x, y);
+                inputCounter++;
+                dotCounter++;
+                acceptInput = false;
+                dotList.push_back(dot1);
+                dotList.push_back(dot2);
+                dotList.push_back(dot3);
+                dotList.push_back(dot4);
+                dotList.push_back(dot5);
+                dotList.push_back(dot6);
+            }
+        }
+
         /***************************************************************************
-         last input
+                 Chaos part
          ***************************************************************************/
-      
+        if (dotCounter >= 6)
+        {
+            RectangleShape* ndot = new RectangleShape;          //MAKES NEW EA FRAME
+            ndot->setSize(Vector2f(1, 1));
+            //ndot->setFillColor(Color::White);
+            rng = rand() % (5);                                 //RANDOM 0,1,2
+            if (rng == 0)
+            {
+                ndot->setFillColor(pink);
+                temp = dot1.getPosition();                      //GET FIRST DOT X AND Y
+                temp2 = dotList.at(dotList.size() - 1).getPosition();//GET LAST DOT X AND Y
+                temp.x = lerp(temp.x, temp2.x, 0.33);                           ///////////////////////////
+                temp.y = lerp(temp.y, temp2.y, 0.33);                                   //GET MIDPOINT^^/////////////
+                ndot->setPosition(temp);                            //MIDPOINT IS NEW DOT, BACK AT THE LINE
+                dotList.push_back(*ndot);
+                dotCounter++;
 
 
+            }
+            else if (rng == 1)
+            {
+                ndot->setFillColor(blue);
+                temp = dot2.getPosition();
+                temp2 = dotList.at(dotList.size() - 1).getPosition();
+                temp.x = lerp(temp.x, temp2.x, 0.33);                           ///////////////////////////
+                temp.y = lerp(temp.y, temp2.y, 0.33);
+                ndot->setPosition(temp);
+                dotList.push_back(*ndot);
+                dotCounter++;
+
+            }
+            else if (rng == 2)
+            {
+                ndot->setFillColor(red);
+                temp = dot3.getPosition();
+                temp2 = dotList.at(dotList.size() - 1).getPosition();
+                temp.x = lerp(temp.x, temp2.x, 0.33);                           ///////////////////////////
+                temp.y = lerp(temp.y, temp2.y, 0.33);
+                ndot->setPosition(temp);
+                dotList.push_back(*ndot);
+                dotCounter++;
+
+            }
+            else if (rng == 3)
+            {
+                ndot->setFillColor(yellow);
+                temp = dot4.getPosition();
+                temp2 = dotList.at(dotList.size() - 1).getPosition();
+                temp.x = lerp(temp.x, temp2.x, 0.33);                           ///////////////////////////
+                temp.y = lerp(temp.y, temp2.y, 0.33);
+                ndot->setPosition(temp);
+                dotList.push_back(*ndot);
+                dotCounter++;
+
+            }
+            else if (rng == 4)
+            {
+                ndot->setFillColor(green);
+                temp = dot5.getPosition();
+                temp2 = dotList.at(dotList.size() - 1).getPosition();
+                temp.x = lerp(temp.x, temp2.x, 0.33);                           ///////////////////////////
+                temp.y = lerp(temp.y, temp2.y, 0.33);
+                ndot->setPosition(temp);
+                dotList.push_back(*ndot);
+                dotCounter++;
+
+            }
+            else
+            {
+                ndot->setFillColor(green);
+                temp = dot6.getPosition();
+                temp2 = dotList.at(dotList.size() - 1).getPosition();
+                temp.x = lerp(temp.x, temp2.x, 0.33);                           ///////////////////////////
+                temp.y = lerp(temp.y, temp2.y, 0.33);
+                ndot->setPosition(temp);
+                dotList.push_back(*ndot);
+                dotCounter++;
+
+            }
+        }
 
 
-
-
-
-
-        if (event.type == Event::MouseButtonReleased)//makes it so theres no 100 clicks per second
+        //makes it so theres no 100 clicks per second
+        if (event.type == Event::MouseButtonReleased)
         {
             acceptInput = true;
         }
@@ -151,18 +282,35 @@ int main()
 
         //draw
         window.clear();
-        // took these out to see triangle
-        //window.draw(text);
-        //window.draw(dotText);
-        window.draw(dota);
-        window.draw(dotb);
-        window.draw(dotc);
-        // loop to draw the squares added to vector
-        for (int i = 0; i < s.size(); i++) {
-            window.draw(s[i]);
+        window.draw(text);
+        window.draw(dotText);
+        for (int i = 5; i < dotList.size(); i++)      //NOTE i=3, case window already drawing dots1-4 down there
+        {
+            window.draw(dotList.at(i));
         }
+        window.draw(dot1);
+        window.draw(dot2);
+        window.draw(dot3);
+        window.draw(dot4);
+        window.draw(dot5);
+        window.draw(dot6);
         window.display();
 
 
     }
 }
+
+
+
+
+// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
+// Debug program: F5 or Debug > Start Debugging menu
+
+// Tips for Getting Started: 
+//   1. Use the Solution Explorer window to add/manage files
+//   2. Use the Team Explorer window to connect to source control
+//   3. Use the Output window to see build output and other messages
+//   4. Use the Error List window to view errors
+//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
+//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
