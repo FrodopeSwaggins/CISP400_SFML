@@ -19,8 +19,8 @@ class ComplexPlane
 		View getView();
 		void setMouseLocation(Vector2f coord);
 		void loadText(Text& text);
-		//static size_t countIterations(Vector2f coord);
-		//static void iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b);
+		static size_t countIterations(Vector2f coord);
+		static void iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b);
 
 	private:
 		Vector2f m_mouseLocation;

@@ -1,49 +1,92 @@
+#include <SFML/Graphics.hpp>
 #include "ComplexPlane.h"
-#include <iostream>
 
 int main()
 {
-    // rendering window and creating aspect ratio
-    Vector2f resolution;
-    resolution.x = VideoMode::getDesktopMode().width;
-    resolution.y = VideoMode::getDesktopMode().height;
+    // Get desktop resolution and aspect ratio
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    float aspectRatio = static_cast<float>(desktop.height) / desktop.width;
 
-    RenderWindow window(VideoMode(resolution.x, resolution.y), "Mandelbrot Set", Style::Fullscreen);
+    // Construct window
+    sf::RenderWindow window(sf::VideoMode(desktop.width, desktop.height), "Mandelbrot Set");
 
-    // initializing ComplexPlane object using the aspect ratio
-    float ratio = resolution.x / resolution.y;
-    ComplexPlane mandel(ratio);
-    
-    // hud and font initializers
-    Text hud;
-    Font font;
+    // Construct complex plane
+    ComplexPlane complexPlane(aspectRatio);
 
-    // VertexArray initialized with 'Points' type
-    VertexArray screen;
-    screen.setPrimitiveType(Points);
-    screen.resize(resolution.x * resolution.y);
+    // Construct font and text objects
+    sf::Font font;
+    font.loadFromFile("arial.ttf");
+    sf::Text text("", font, 20);
+    text.setPosition(10, 10);
+    text.setFillColor(sf::Color::White);
 
-    // enum class for game states
-    enum class State { CALCULATING, DISPLAYING};
+    // Construct VertexArray
+    const int pixelWidth = desktop.width;
+    const int pixelHeight = desktop.height;
+    sf::VertexArray vArray(sf::Points, pixelWidth * pixelHeight);
+    for (int i = 0; i < pixelHeight; i++) {
+        for (int j = 0; j < pixelWidth; j++) {
+            vArray[j + i * pixelWidth].position = { (float)j,(float)i };
+        }
+    }
+
+    // Initialize state variable to CALCULATING
+    enum class State { CALCULATING, DISPLAYING };
     State state = State::CALCULATING;
 
-    // game loop. work in progress. can close window and thats it.
+    // Begin main loop
     while (window.isOpen())
     {
-        Event event;
+        // Handle Input segment
+        sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == Event::Closed)
-            {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+            else if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+                sf::Vector2f coord = window.mapPixelToCoords(pixelPos, complexPlane.getView());
+                if (event.mouseButton.button == sf::Mouse::Right) {
+                    complexPlane.zoomOut();
+                    complexPlane.setCenter(coord);
+                    state = State::CALCULATING;
+                }
+                else if (event.mouseButton.button == sf::Mouse::Left) {
+                    complexPlane.zoomIn();
+                    complexPlane.setCenter(coord);
+                    state = State::CALCULATING;
+                }
+            }
+            else if (event.type == sf::Event::MouseMoved) {
+                sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+                sf::Vector2f coord = window.mapPixelToCoords(pixelPos, complexPlane.getView());
+                complexPlane.setMouseLocation(coord);
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window.close();
             }
         }
-        if (Keyboard::isKeyPressed(Keyboard::Escape))
-        {
-            window.close();
+
+        // Update Scene segment
+        if (state == State::CALCULATING) {
+            for (int i = 0; i < pixelHeight; i++) {
+                for (int j = 0; j < pixelWidth; j++) {
+                    sf::Vector2f coord = window.mapPixelToCoords(sf::Vector2i(j, i), complexPlane.getView());
+                    size_t count = complexPlane.countIterations(coord);
+                    Uint8 r, g, b;
+                    complexPlane.iterationsToRGB(count, r, g, b);
+                    vArray[j + i * pixelWidth].color = sf::Color(r, g, b);
+                }
+            }
+            complexPlane.loadText(text);
+            state = State::DISPLAYING;
         }
 
-        
+        // Draw Scene segment
+        window.clear();
+        window.draw(vArray);
+        window.draw(text);
+        window.display();
     }
 }
-

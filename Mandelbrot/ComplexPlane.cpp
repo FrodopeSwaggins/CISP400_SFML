@@ -49,14 +49,32 @@ void ComplexPlane::loadText(Text& text)
 	text.setString(ss.str());
 
 }
-/*
-size_t ComplexPlane::countIterations(Vector2f coord)
+
+size_t ComplexPlane::countIterations(sf::Vector2f coord)
 {
-	 
+	sf::Vector2f z(0.0, 0.0);
+	size_t count = 0;
+	while (count < MAX_ITER && z.x * z.x + z.y * z.y < 4.0)
+	{
+		sf::Vector2f zNew(z.x * z.x - z.y * z.y + coord.x, 2.0 * z.x * z.y + coord.y);
+		z = zNew;
+		count++;
+	}
+	return count;
 }
 
 void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b)
 {
-
+	if (count == MAX_ITER)
+	{
+		r = 0;
+		g = 0;
+		b = 0;
+	}
+	else
+	{
+		r = static_cast<Uint8>(count * 255 / MAX_ITER);
+		g = static_cast<Uint8>(count * 255 / MAX_ITER);
+		b = static_cast<Uint8>(count * 255 / MAX_ITER);
+	}
 }
-*/
