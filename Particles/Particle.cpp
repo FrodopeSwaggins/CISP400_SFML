@@ -4,25 +4,26 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
 {
     m_ttl = TTL;
     m_numPoints = numPoints;
-    m_radiansPerSec = (float)rand() / (RAND_MAX + 1) * PI;
+
+    m_radiansPerSec = ((float)rand() / RAND_MAX + 1) * PI;
 
     m_cartesianPlane.setCenter(0, 0);
     m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);
 
     m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);
 
-    m_vx = rand() % 500 + 100;
-    m_vy = rand() % 500 + 100;
+    m_vx = rand() % 400 + 100;
+    m_vy = rand() % 400 + 100;
 
     m_color1 = (Color::White);
     m_color2 = (Color(rand() % 255, rand() % 255, rand() % 255));
 
-    float theta = (float)rand() / (RAND_MAX + 1) * (PI / 2);
+    float theta = ((float)rand() / (RAND_MAX + 1)) * (PI / 2);
     float dTheta = 2 * PI / (numPoints - 1);
 
     for (int j = 0; j < numPoints; j++)
     {
-        float r = rand() % 80 + 20; // !fix me! 20 - 80
+        float r = rand() % 61 + 20;
         float dx = r * cos(theta);
         float dy = r * sin(theta);
 
@@ -46,7 +47,7 @@ void Particle::draw(RenderTarget& target, RenderStates states) const
 }
 void Particle::update(float dt) 
 {
-    m_ttl -= dt;
+    m_ttl = m_ttl - dt;
     rotate(dt * m_radiansPerSec);
     scale(SCALE);
 
@@ -54,7 +55,7 @@ void Particle::update(float dt)
     float dy;
 
     dx = m_vx * dt;
-    m_vy -= (G * dt);
+    m_vy = m_vy - (G * dt);
     dy = m_vy * dt;
 
     translate(dx, dy);
@@ -206,15 +207,31 @@ void Particle::unitTests()
 
 void Particle::rotate(double theta)
 {
+    Vector2f temp = m_centerCoordinate;
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
 
+    RotationMatrix R(theta);
+    m_A = R * m_A;
+    
+    translate(temp.x, temp.y);
 }
 
 void Particle::scale(double c)
 {
+    Vector2f temp = m_centerCoordinate;
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
 
+    ScalingMatrix S(c);
+    m_A = S * m_A;
+
+    translate(temp.x, temp.y);
 }
 
 void Particle::translate(double xShift, double yShift)
 {
+    TranslationMatrix T(xShift, yShift, m_numPoints);
+    m_A = T + m_A;
 
+    m_centerCoordinate.x += xShift;
+    m_centerCoordinate.y += yShift;
 }
