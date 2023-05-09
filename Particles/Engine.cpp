@@ -8,30 +8,26 @@ void Engine::input()
 	{
 		switch (event.type) 
 		{
-			case sf::Event::Closed:
+			case Event::Closed:
 				m_Window.close();
 				break;
 
-			case sf::Event::KeyPressed:
-				if (event.key.code == sf::Keyboard::Escape) 
+			case Event::KeyPressed:
+				if (event.key.code == Keyboard::Escape) 
 				{
 					m_Window.close();
 				}
 				break;
 
-			case sf::Event::MouseButtonPressed:
-				if (event.mouseButton.button == sf::Mouse::Left) 
+			case Event::MouseButtonPressed:
+				if (event.mouseButton.button == Mouse::Left) 
 				{
-					sf::Vector2i mousePos = sf::Mouse::getPosition(m_Window);
 					for (int i = 0; i < 5; i++) 
 					{
 						int numPoints = rand() % 26 + 25;
-						m_particles.emplace_back(m_Window, numPoints, mousePos);
+						m_particles.emplace_back(m_Window, numPoints, Mouse::getPosition(m_Window));
 					}
 				}
-				break;
-
-			default:
 				break;
 		}
 	}
@@ -39,16 +35,17 @@ void Engine::input()
 
 void Engine::update(float dtAsSeconds)
 {
-	for (auto i = m_particles.begin(); i != m_particles.end();)
+
+	for (auto it = m_particles.begin(); it != m_particles.end();)
 	{
-		if (i->getTTL() > 0.0)
+		if (it->getTTL() > 0.0)
 		{
-			i->update(dtAsSeconds);
-			++i;
+			it->update(dtAsSeconds);
+			++it;
 		}
 		else
 		{
-			i = m_particles.erase(i);
+			it = m_particles.erase(it);
 		}
 	}
 }
@@ -57,10 +54,11 @@ void Engine::draw()
 {
 	m_Window.clear();
 
-	for (auto& i : m_particles)
+	for (int i = 0; i < m_particles.size(); i++)
 	{
-		m_Window.draw(i);
+		m_Window.draw(m_particles.at(i));
 	}
+
 	m_Window.display();
 }
 
@@ -71,7 +69,6 @@ Engine::Engine()
 
 void Engine::run()
 {
-	Clock clock;
 
 	cout << "Starting Particle unit tests..." << endl;
 	Particle p(m_Window, 4, { (int)m_Window.getSize().x / 2, (int)m_Window.getSize().y / 2 });
@@ -80,11 +77,10 @@ void Engine::run()
 
 	while (m_Window.isOpen())
 	{
-		clock.restart();
-		float seconds = clock.getElapsedTime().asSeconds();
+		clock_t clock = std::clock();
 
 		input();
-		update(seconds);
+		update((double)(std::clock() - clock) / CLOCKS_PER_SEC);
 		draw();
 	}
 }
