@@ -1,4 +1,7 @@
-﻿  Particle.cpp
+﻿  Engine.cpp
+C:\VS Projects\Particles\Particle.h(5,45): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\VS Projects\Particles\Particle.h(8,26): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Particle.cpp
 C:\VS Projects\Particles\Particle.h(5,45): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\VS Projects\Particles\Particle.h(8,26): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\VS Projects\Particles\Particle.cpp(11,57): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
@@ -8,26 +11,30 @@ C:\VS Projects\Particles\Particle.cpp(11,46): warning C4244: 'argument': convers
               T=unsigned int
           ]
 C:\VS Projects\Particles\Particle.cpp(15,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\VS Projects\Particles\Particle.cpp(16,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\VS Projects\Particles\Particle.cpp(26,17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\VS Projects\Particles\Particle.cpp(43,89): warning C4244: 'argument': conversion from 'const double' to 'T', possible loss of data
+C:\VS Projects\Particles\Particle.cpp(17,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\VS Projects\Particles\Particle.cpp(27,17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\VS Projects\Particles\Particle.cpp(45,89): warning C4244: 'argument': conversion from 'const double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\VS Projects\Particles\Particle.cpp(43,74): warning C4244: 'argument': conversion from 'const double' to 'T', possible loss of data
+C:\VS Projects\Particles\Particle.cpp(45,74): warning C4244: 'argument': conversion from 'const double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\VS Projects\Particles\Particle.cpp(235,29): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
+C:\VS Projects\Particles\Particle.cpp(94,29): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\VS Projects\Particles\Particle.cpp(236,29): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
+C:\VS Projects\Particles\Particle.cpp(95,29): warning C4244: '+=': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
+  main.cpp
+C:\VS Projects\Particles\Particle.h(5,45): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\VS Projects\Particles\Particle.h(8,26): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Generating Code...
   Particles.vcxproj -> C:\VS Projects\Particles\x64\Debug\Particles.exe
